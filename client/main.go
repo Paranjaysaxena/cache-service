@@ -1,7 +1,7 @@
 package main
 
 import (
-	gen "cache-service/proto"
+	gen "main/proto"
 	"context"
 	"fmt"
 

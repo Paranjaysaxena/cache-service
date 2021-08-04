@@ -1,8 +1,8 @@
 package main
 
 import (
-	"cache-service/database"
-	gen "cache-service/proto"
+	"main/database"
+	gen "main/proto"
 	"context"
 	"fmt"
 	"net"
