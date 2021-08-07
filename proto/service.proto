@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = ".;gen;";
+
+message Request {
+    string key = 1;
+    bytes value = 2;
+}
+
+message Response {
+    bytes value = 1;
+}
+
+service AddService {
+    rpc Set (Request) returns (Response);
+    rpc Get (Request) returns (Response);
+}
