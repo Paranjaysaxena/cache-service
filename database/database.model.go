@@ -1,8 +1,8 @@
 package database
 
 type Database interface {
-	Set(key string, value []byte) ([]byte, error)
-	Get(key string) ([]byte, error)
+	Set(key string, user User) (User, error)
+	Get(key string) (User, error)
 }
 
 // Factory looks up according to the databaseName the database implementation

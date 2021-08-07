@@ -3,10 +3,18 @@ package database
 import (
 	"fmt"
 	"github.com/go-redis/redis/v7"
+	"encoding/json"
 )
 
 type redisDatabase struct {
 	client *redis.Client
+}
+
+type User struct {
+	Name     string `json:"name"`
+    Class    string `json:"class"`
+    RollNum  int64  `json:"roll_num"`
+    Metadata []byte `json:"metadata"`
 }
 
 func createRedisDatabase() (Database, error) {
@@ -22,28 +30,24 @@ func createRedisDatabase() (Database, error) {
 	return &redisDatabase{client: client}, nil
 }
 
-func (r *redisDatabase) Set(key string, value []byte) ([]byte, error) {
-	val, err := r.client.Set(key, string(value), 0).Result()
-	if err != nil {
-		return generateError("set", err)
-	}
+func (r *redisDatabase) Set(key string, user User) (User, error) {
 
-	return []byte(val), nil
+	u, _ := json.Marshal(user)
+
+	val, err := r.client.Set(key, u, 0).Result()
+
+	var newUser User
+
+	json.Unmarshal([]byte(val), &newUser)
+
+	return newUser, err
 }
 
-func (r *redisDatabase) Get(key string) ([]byte, error) {
+func (r *redisDatabase) Get(key string) (User, error) {
 	val, err := r.client.Get(key).Result()
-	if err != nil {
-		return generateError("get", err)
-	}
 
-	return []byte(val), nil
-}
+	var u User
+	json.Unmarshal([]byte(val), &u)
 
-func generateError(operation string, err error) ([]byte, error) {
-	if err == redis.Nil {
-		return []byte{}, &OperationError{operation}
-	}
-
-	return []byte{}, &DownError{}
+	return u, err
 }
