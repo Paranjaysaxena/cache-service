@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = ".;gen;";
+
+message User {
+    string Name = 1;
+    string Class = 2;
+    int64 RollNum = 3;
+    bytes Metadata = 4;
+}
+
+service AddService {
+    rpc SetUser (User) returns (User);
+    rpc GetUser(User) returns (User);
+}
